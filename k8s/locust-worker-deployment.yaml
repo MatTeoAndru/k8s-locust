@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locust-worker
+  labels:
+    name: locust-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: locust-worker
+  template:
+    metadata:
+      labels:
+        app: locust-worker
+        name: locust-worker
+        role: worker
+    spec:
+      volumes:
+      - name: locust-volume
+        configMap:
+          name: locust-configmap
+      containers:
+        - name: locust-worker
+          image: locustio/locust:1.5.1 # Locust version
+          resources:
+            limits:
+              cpu: 200m
+            requests:
+              cpu: 100m
+          env:
+            - name: LOCUST_MODE_WORKER
+              value: "true"
+            - name: LOCUST_MASTER_NODE_HOST
+              value: locust-master
+            - name: LOCUST_LOCUSTFILE
+              value: /locust-tasks/locustfile.py
+          volumeMounts:
+          - name: locust-volume
+            mountPath: /locust-tasks/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: locust-master
+  labels:
+    name: locust-master
+spec:
+  type: LoadBalancer
+  selector:
+    name: locust-master
+    role: master  
+  ports:
+    - port: 8089
+      protocol: TCP
+      name: master-web
+    - port: 5557
+      protocol: TCP
+      name: master-port-1
+    - port: 5558
+      protocol: TCP
+      name: master-port-2
