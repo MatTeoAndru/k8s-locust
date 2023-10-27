@@ -51,3 +51,13 @@ kubectl get svc locust-master -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
 ```bash
 kubectl delete namespace locust
 ```
+
+
+USEFUL LINKS
+https://github.com/karol-brejna-i/locust-experiments/tree/master/kubernetes
+https://github.com/vmallya-123/learn-locust/blob/main/distributed/k8s/master-controller-with-metrics.yaml
+https://github.com/peter-evans/locust-docker/tree/master/kubernetes
+https://github.com/jthin/locust-k8s/blob/master/README.md
+https://github.com/koudaiii/distributed-load-testing-using-locust-on-aks/tree/main
+
+
