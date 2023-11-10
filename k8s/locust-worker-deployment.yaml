@@ -5,7 +5,7 @@ metadata:
   labels:
     name: locust-worker
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: locust-worker
@@ -19,10 +19,11 @@ spec:
       volumes:
       - name: locust-volume
         configMap:
-          name: locust-configmap
+          name: locust-cm
       containers:
         - name: locust-worker
-          image: locustio/locust:1.5.1 # Locust version
+          image: klocust # Locust version
+          imagePullPolicy: Never
           resources:
             limits:
               cpu: 200m

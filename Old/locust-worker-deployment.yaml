@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locust-worker
+  labels:
+    name: locust-worker
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: locust-worker
+  template:
+    metadata:
+      labels:
+        app: locust-worker
+        name: locust-worker
+        role: worker
+    spec:
+      volumes:
+      - name: locust-volume
+        configMap:
+          name: locust-configmap
+      containers:
+        - name: locust-worker
+          #image: #klocust:1.0 #
+          image: 622377744909.dkr.ecr.eu-central-1.amazonaws.com/k8s/locust:1.6 # Locust version
+          #imagePullPolicy: Never
+          # resources:
+          #   limits:
+          #     cpu: 400m
+          #   requests:
+          #     cpu: 300m
+          env:
+            - name: LOCUST_MODE_WORKER
+              value: "true"
+            - name: LOCUST_MASTER_NODE_HOST
+              value: locust-master
+            - name: LOCUST_LOCUSTFILE
+              value: /locust-tasks/locustfile.py
+          volumeMounts:
+          - name: locust-volume
+            mountPath: /locust-tasks/

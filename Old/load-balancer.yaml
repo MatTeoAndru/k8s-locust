@@ -1,0 +1,48 @@
+# esposizione della porta 443 con redirect e ip fissato in ingresso sul SG
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: ns-matteo
+  name: alb-ingress-locust
+  labels:
+    app: ingress
+  annotations: # https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/ingress/annotations/#scheme
+    alb.ingress.kubernetes.io/group.name: albfe-locust
+    alb.ingress.kubernetes.io/target-type: instance # "instance" mode will route traffic to all ec2 instances within cluster on NodePort opened for your service
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+#   alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=30
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/inbound-cidrs: "89.186.39.0/24"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:622377744909:certificate/b9fcf7ba-d63b-43fa-91e3-0eccfc2d2f4b
+
+#    alb.ingress.kubernetes.io/healthcheck-interval-seconds: "15"
+#    alb.ingress.kubernetes.io/healthcheck-path: /prometheus/graph
+    # alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    # alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    # alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+    # alb.ingress.kubernetes.io/healthy-threshold-count: "2"
+    # alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
+    #alb.ingress.kubernetes.io/success-codes: 200,302
+    alb.ingress.kubernetes.io/tags: Servizio=Infrastruttura,RepartoCompetenza=Sistemi
+spec:
+  ingressClassName: alb
+  rules:
+    - host: locust-tools.passstage.cloud 
+  # rules:
+  #   - host: hopless-eks-tools.passstage.cloud
+  #     http:
+  #       paths:
+  #         - pathType: Prefix # https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types
+  #           path: /prometheus
+  #           backend:
+  #             service:
+  #               name: kube-prometheus-stack-prometheus
+  #               port:
+  #                 number: 9090
+  defaultBackend:
+    service:
+      name: locust-master
+      port:
+        number: 8089

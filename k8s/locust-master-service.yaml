@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: locust-master
-  namespace: locust
+  namespace: ns-matteo
   labels:
     app: locust-master
 spec:

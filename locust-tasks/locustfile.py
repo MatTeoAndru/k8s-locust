@@ -1,17 +1,32 @@
-import time
-from locust import HttpUser, task
+from locust import FastHttpUser, TaskSet, task, between ,constant, events
 
-class QuickstartUser(HttpUser):
+
+#https://servizipasshub.passstage.cloud
+
+idinstallazione = "1919006000"
+
+
+class MyUser(TaskSet):
+
     @task
-    def hello_world(self):
-        self.client.get("/hello")
-        self.client.get("/world")
+    def get_fatture(self):
 
-    @task(3)
-    def view_item(self):
-        for item_id in range(10):
-            self.client.get(f"/item?id={item_id}", name="/item")
-            time.sleep(1)
+        file_path = "../cert/jwt_token.txt"  
+        with open(file_path, "r") as file:
+            line = file.readline()
 
-    def on_start(self):
-        self.client.post("/login", json={"username":"foo", "password":"bar"})
+        jwt_token = line.strip() 
+
+        
+        headers = {
+            "Authorization": f"Bearer {jwt_token}",
+            "Content-Type": "application/json"  # Adjust the content type as needed
+        }
+        url = f"/v1/{idinstallazione}/totali"
+        self.client.get(url, headers=headers)
+
+
+
+class MyLocust(FastHttpUser):  # Update 'Locust' to 'HttpUser'
+    tasks = [MyUser]
+    wait_time = constant(0.5)  
