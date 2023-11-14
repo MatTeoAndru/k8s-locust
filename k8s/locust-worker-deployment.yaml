@@ -5,7 +5,7 @@ metadata:
   labels:
     name: locust-worker
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: locust-worker
@@ -19,45 +19,23 @@ spec:
       volumes:
       - name: locust-volume
         configMap:
-          name: locust-cm
+          name: locust-configmap
       containers:
         - name: locust-worker
-          image: klocust # Locust version
-          imagePullPolicy: Never
-          resources:
-            limits:
-              cpu: 200m
-            requests:
-              cpu: 100m
+          image: 622377744909.dkr.ecr.eu-central-1.amazonaws.com/k8s/locust:latest # Locust version
+          #imagePullPolicy: Never
+          # resources:
+          #   limits:
+          #     cpu: 400m
+          #   requests:
+          #     cpu: 300m
           env:
             - name: LOCUST_MODE_WORKER
               value: "true"
             - name: LOCUST_MASTER_NODE_HOST
               value: locust-master
             - name: LOCUST_LOCUSTFILE
-              value: /locust-tasks/locustfile.py
+              value: /locust-tasks/basic.py
           volumeMounts:
           - name: locust-volume
-            mountPath: /locust-tasks/
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: locust-master
-  labels:
-    name: locust-master
-spec:
-  type: LoadBalancer
-  selector:
-    name: locust-master
-    role: master  
-  ports:
-    - port: 8089
-      protocol: TCP
-      name: master-web
-    - port: 5557
-      protocol: TCP
-      name: master-port-1
-    - port: 5558
-      protocol: TCP
-      name: master-port-2
+            mountPath: /locust-token/

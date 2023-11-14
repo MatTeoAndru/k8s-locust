@@ -1,6 +1,4 @@
-#$ kubectl port-forward svc/locust-master 8089:8089 -n yournamespace
-# ingress .yaml
-
+#https://docs.locust.io/en/stable/configuration.html
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,36 +20,34 @@ spec:
       volumes:
       - name: locust-volume
         configMap:
-          name: locust-cm
+          name: locust-configmap
       containers:
         - name: locust-master
-          image: klocust # Locust version
-          imagePullPolicy: Never
+          image: 622377744909.dkr.ecr.eu-central-1.amazonaws.com/k8s/locust:latest # Locust version
+          #imagePullPolicy: Never
           resources:
             limits:
-              cpu: 200m
+              cpu: 300m
             requests:
-              cpu: 100m
+              cpu: 200m
           env:
             - name: LOCUST_MODE_MASTER
               value: "true"
             - name: LOCUST_EXPECT_WORKERS
-              value: "1" # Set the number of workers expected
+              value: "4" 
             - name: LOCUST_LOCUSTFILE
-              value: /locust-tasks/locustfile.py
+              value: /locust-tasks/basic.py
+            - name: locustFile
+              value: /locust-tasks/basic.py
+          
           volumeMounts:
           - name: locust-volume
-            mountPath: /locust-tasks
+            mountPath: /locust-token
+
           ports:
-            - name: loc-master-web
-              containerPort: 8089
-              protocol: TCP
-            - name: loc-master-p1 
-              containerPort: 5557
-              protocol: TCP
-            - name: loc-master-p2
-              containerPort: 5558
-              protocol: TCP
+            - containerPort: 8089
+            - containerPort: 5557
+            - containerPort: 5558
           livenessProbe:
             periodSeconds: 30
             initialDelaySeconds: 10

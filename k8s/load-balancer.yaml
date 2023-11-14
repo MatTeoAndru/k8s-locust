@@ -1,4 +1,3 @@
-# esposizione della porta 443 con redirect e ip fissato in ingresso sul SG
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

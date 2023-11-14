@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<azienda>
+    <nome>Prova 3</nome>
+    <cognome>Matteo 3</cognome>
+    <ragione_sociale>LOCUST 3</ragione_sociale>
+    <partita_iva>04434100402</partita_iva>
+    <codice_fiscale>15145641861</codice_fiscale>
+    <email>fklsfko@dsjkofr.com</email>
+    <email_pec>flfkglf@peccccc.it</email_pec>
+    <indirizzo>VIA DEI MATTEO, 4</indirizzo>
+    <localita>SANTARCANGELO DI ROMAGNA</localita>
+    <cap>47822</cap>
+    <paese>IT</paese>
+    <provincia>RN</provincia>
+    <telefono></telefono>
+    <partita_iva_depositario></partita_iva_depositario>
+    <tipo_gestione_fatture_PA>1</tipo_gestione_fatture_PA>
+    <tipo_gestione_fatture_B2B>1</tipo_gestione_fatture_B2B>
+    <IsConservazioneDocumenti>0</IsConservazioneDocumenti>
+    <IsSistemaRicevente>0</IsSistemaRicevente>
+    <tipo_prodotto>1</tipo_prodotto>
+    <documenti_elettronici>0</documenti_elettronici>
+    <is_import_rsm>0</is_import_rsm>
+    <is_export_rsm>0</is_export_rsm>
+</azienda>
